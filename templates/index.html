@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scraped Images</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .image-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center; /* Center images horizontally */
+        }
+        .image-item {
+            margin: 10px;
+            max-width: 200px;
+            text-align: center;
+            border: 1px solid #ddd;
+            padding: 10px;
+            box-sizing: border-box; /* Include padding in width calculation */
+        }
+        .image-item img {
+            max-width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            cursor: pointer;
+            border: 2px solid #ddd; /* Default border */
+            transition: border-color 0.3s ease; /* Smooth transition for border color */
+        }
+        .image-item img.selected {
+            border-color: #007BFF; /* Border color for selected images */
+        }
+        .details {
+            margin-top: 10px;
+            text-align: left;
+        }
+        .details .name, .details .price {
+            border-top: 1px solid #ddd;
+            padding: 5px;
+            margin-top: 5px;
+            display: block;
+        }
+        .compare-button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .compare-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>ECOMMERCE SCRAPER</h1>
+    <div class="image-container">
+        {% for product in product_data %}
+            <div class="image-item">
+                <img src="{{ url_for('display_image', filename=product['filename']) }}" alt="Image" data-filename="{{ product['filename'] }}">
+                <div class="details">
+                    <div class="name">NAME:{{ product['name'] }}</div>
+                    <div class="price">PRICE:{{ product['price'] }}</div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <form action="/compare" method="POST">
+        <input type="hidden" name="selected_images" id="selected-images">
+        <button type="submit" class="compare-button">Compare</button>
+    </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const images = document.querySelectorAll('.image-container img');
+            const selectedImagesInput = document.getElementById('selected-images');
+            
+            images.forEach(image => {
+                image.addEventListener('click', () => {
+                    image.classList.toggle('selected');
+                    const selectedImages = Array.from(document.querySelectorAll('.image-container img.selected'))
+                                                .map(img => img.getAttribute('data-filename'));
+                    selectedImagesInput.value = selectedImages.join(',');
+                    console.log(`Selected Images: ${selectedImages}`); // Debugging log
+                });
+            });
+        });
+    </script>
+</body>
+</html>
