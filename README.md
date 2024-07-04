@@ -80,7 +80,7 @@ To install the dependencies, run:
 
 ```bash
 pip install -r requirements.txt
-
+```
 ## Screenshots
 ![alt text](example_images/Screenshot1.png)
 ![alt text](example_images/Screenshot2.png) 
